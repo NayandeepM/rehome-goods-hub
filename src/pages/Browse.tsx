@@ -190,6 +190,8 @@ const Browse = () => {
                     handleCategoryChange={handleCategoryChange}
                     handleConditionChange={handleConditionChange}
                     setPriceRange={setPriceRange}
+                    setSelectedCategories={setSelectedCategories}
+                    setSelectedConditions={setSelectedConditions}
                   />
                 </div>
               )}
@@ -207,6 +209,8 @@ const Browse = () => {
                   handleCategoryChange={handleCategoryChange}
                   handleConditionChange={handleConditionChange}
                   setPriceRange={setPriceRange}
+                  setSelectedCategories={setSelectedCategories}
+                  setSelectedConditions={setSelectedConditions}
                 />
               </div>
             </div>
@@ -278,6 +282,8 @@ interface FiltersSidebarProps {
   handleCategoryChange: (category: string) => void;
   handleConditionChange: (condition: string) => void;
   setPriceRange: React.Dispatch<React.SetStateAction<number[]>>;
+  setSelectedCategories: React.Dispatch<React.SetStateAction<string[]>>;
+  setSelectedConditions: React.Dispatch<React.SetStateAction<string[]>>;
 }
 
 const FiltersSidebar = ({
@@ -288,7 +294,9 @@ const FiltersSidebar = ({
   priceRange,
   handleCategoryChange,
   handleConditionChange,
-  setPriceRange
+  setPriceRange,
+  setSelectedCategories,
+  setSelectedConditions
 }: FiltersSidebarProps) => {
   return (
     <>
