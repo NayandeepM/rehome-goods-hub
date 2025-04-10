@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
+import Browse from "./pages/Browse";
 
 // Create a new instance of QueryClient with default settings
 const queryClient = new QueryClient({
@@ -40,7 +41,7 @@ const App = () => (
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Index />} />
-            <Route path="/browse" element={<PlaceholderPage title="Browse Items" />} />
+            <Route path="/browse" element={<Browse />} />
             <Route path="/categories" element={<PlaceholderPage title="Categories" />} />
             <Route path="/how-it-works" element={<PlaceholderPage title="How It Works" />} />
             <Route path="/login" element={<PlaceholderPage title="Login / Register" />} />
