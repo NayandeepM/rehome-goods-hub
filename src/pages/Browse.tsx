@@ -95,7 +95,7 @@ const conditions = [
 
 const Browse = () => {
   const [searchQuery, setSearchQuery] = useState("");
-  const [priceRange, setPriceRange] = useState([0, 500]);
+  const [priceRange, setPriceRange] = useState<number[]>([0, 500]);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [selectedConditions, setSelectedConditions] = useState<string[]>([]);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
@@ -245,7 +245,18 @@ const Browse = () => {
 };
 
 // ProductCard component
-const ProductCard = ({ product }: { product: any }) => {
+interface ProductCardProps {
+  product: {
+    id: string;
+    title: string;
+    price: number;
+    category: string;
+    condition: string;
+    image: string;
+  };
+}
+
+const ProductCard = ({ product }: ProductCardProps) => {
   return (
     <Card className="h-full flex flex-col transition-all hover:shadow-md">
       <div className="aspect-square overflow-hidden bg-gray-100">
