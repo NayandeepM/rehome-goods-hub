@@ -4,6 +4,7 @@ import { Filter } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import FiltersSidebar from "./FiltersSidebar";
 import ProductGrid from "./ProductGrid";
+import { categories, conditions } from "../data/mockProducts";
 
 interface BrowseLayoutProps {
   filteredProducts: {
