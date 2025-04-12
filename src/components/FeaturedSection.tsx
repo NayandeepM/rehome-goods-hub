@@ -2,92 +2,24 @@
 import { useState } from "react";
 import { ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import ProductCard from "./ProductCard";
-
-// Sample data (in a real app, this would come from an API)
-const FEATURED_PRODUCTS = [
-  {
-    id: "1",
-    title: "Vintage Leather Jacket",
-    price: 89.99,
-    image: "https://images.unsplash.com/photo-1551028719-00167b16eac5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=735&q=80",
-    seller: "VintageLover",
-    location: "San Francisco",
-    condition: "Good"
-  },
-  {
-    id: "2",
-    title: "Retro Record Player",
-    price: 120.00,
-    image: "https://images.unsplash.com/photo-1462965326201-d02e4f455804?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
-    seller: "MusicCollector",
-    location: "Chicago",
-    condition: "Like New",
-    isNew: true
-  },
-  {
-    id: "3",
-    title: "Handcrafted Ceramic Vase",
-    price: 35.50,
-    image: "https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80",
-    seller: "ArtisanCrafts",
-    location: "Portland",
-    condition: "New"
-  },
-  {
-    id: "4",
-    title: "Vintage Film Camera",
-    price: 67.25,
-    image: "https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
-    seller: "RetroFinds",
-    location: "New York",
-    condition: "Good"
-  },
-  {
-    id: "5",
-    title: "Antique Wooden Chair",
-    price: 145.00,
-    image: "https://images.unsplash.com/photo-1503602642458-232111445657?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80",
-    seller: "VintageFurniture",
-    location: "Boston",
-    condition: "Fair"
-  },
-  {
-    id: "6",
-    title: "Designer Handbag",
-    price: 220.99,
-    image: "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1469&q=80",
-    seller: "FashionReseller",
-    location: "Miami",
-    condition: "Excellent",
-    isNew: true
-  },
-  {
-    id: "7",
-    title: "Mechanical Watch",
-    price: 175.50,
-    image: "https://images.unsplash.com/photo-1524805444758-089113d48a6d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=688&q=80",
-    seller: "TimeKeeper",
-    location: "Seattle",
-    condition: "Good"
-  },
-  {
-    id: "8",
-    title: "Vintage Bicycle",
-    price: 199.00,
-    image: "https://images.unsplash.com/photo-1485965120184-e220f721d03e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
-    seller: "CyclingEnthusiast",
-    location: "Denver",
-    condition: "Good"
-  }
-];
+import { getProducts } from "@/services/productService";
+import { Loader2 } from "lucide-react";
 
 const FeaturedSection = () => {
   const [visibleProducts, setVisibleProducts] = useState(4);
+  
+  const { data: products, isLoading, error } = useQuery({
+    queryKey: ["featuredProducts"],
+    queryFn: getProducts
+  });
 
   const showMoreProducts = () => {
-    setVisibleProducts(Math.min(visibleProducts + 4, FEATURED_PRODUCTS.length));
+    if (products) {
+      setVisibleProducts(Math.min(visibleProducts + 4, products.length));
+    }
   };
 
   return (
@@ -102,21 +34,44 @@ const FeaturedSection = () => {
               Discover unique treasures hand-picked by our team
             </p>
           </div>
-          <Link to="/featured" className="mt-4 sm:mt-0">
+          <Link to="/products" className="mt-4 sm:mt-0">
             <Button variant="link" className="text-rehome-green-600 p-0">
-              View all featured items
+              View all products
               <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
           </Link>
         </div>
         
-        <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {FEATURED_PRODUCTS.slice(0, visibleProducts).map((product) => (
-            <ProductCard key={product.id} {...product} />
-          ))}
-        </div>
+        {isLoading ? (
+          <div className="flex justify-center py-12">
+            <Loader2 className="h-8 w-8 animate-spin text-rehome-green-500" />
+          </div>
+        ) : error ? (
+          <div className="text-center py-12">
+            <p className="text-red-500">Error loading products. Please try again later.</p>
+          </div>
+        ) : products && products.length > 0 ? (
+          <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            {products.slice(0, visibleProducts).map((product) => (
+              <ProductCard 
+                key={product.id}
+                id={product.id}
+                title={product.title}
+                price={product.price}
+                image={product.images ? product.images[0] : "/placeholder.svg"}
+                seller="ReHome Seller"
+                location={product.location || "Unknown"}
+                condition={product.condition}
+              />
+            ))}
+          </div>
+        ) : (
+          <div className="text-center py-12">
+            <p>No featured products available.</p>
+          </div>
+        )}
         
-        {visibleProducts < FEATURED_PRODUCTS.length && (
+        {products && visibleProducts < products.length && (
           <div className="mt-8 text-center">
             <Button 
               variant="outline" 

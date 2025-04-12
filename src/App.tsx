@@ -8,6 +8,7 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import Browse from "./pages/Browse";
+import ProductsPage from "./pages/ProductsPage";
 import PlaceholderPage from "./components/PlaceholderPage";
 
 const queryClient = new QueryClient({
@@ -29,6 +30,7 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/browse" element={<Browse />} />
+            <Route path="/products" element={<ProductsPage />} />
             <Route path="/categories" element={<PlaceholderPage title="Categories" />} />
             <Route path="/how-it-works" element={<PlaceholderPage title="How It Works" />} />
             <Route path="/login" element={<PlaceholderPage title="Login / Register" />} />
