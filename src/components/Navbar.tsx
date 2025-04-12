@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Menu, X, Search, ShoppingCart, User } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -10,10 +9,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
-import { useMobile } from "@/hooks/use-mobile";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const Navbar = () => {
-  const isMobile = useMobile();
+  const isMobile = useIsMobile();
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleMenu = () => {
@@ -94,7 +93,6 @@ const Navbar = () => {
           </div>
         </div>
       </div>
-      {/* Mobile menu */}
       <div className={cn("sm:hidden", isOpen ? "block" : "hidden")}>
         <div className="pt-2 pb-3 space-y-1">
           <Link
