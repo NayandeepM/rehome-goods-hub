@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
@@ -22,7 +21,7 @@ import {
 } from "@/components/ui/select";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { Loader2, Upload } from "lucide-react";
+import { Loader2, Upload, X } from "lucide-react";
 
 const sellItemSchema = z.object({
   title: z.string().min(3, { message: "Title must be at least 3 characters" }),
@@ -65,7 +64,6 @@ const SellItem = () => {
   const [uploading, setUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   
-  // Redirect to login if not authenticated
   if (!user) {
     navigate("/login");
     return null;
@@ -87,7 +85,6 @@ const SellItem = () => {
     if (e.target.files) {
       const newFiles = Array.from(e.target.files);
       
-      // Validate file types
       const validFiles = newFiles.filter(file => 
         file.type.startsWith('image/')
       );
@@ -100,7 +97,6 @@ const SellItem = () => {
         });
       }
       
-      // Limit to max 5 images
       const totalImages = [...images, ...validFiles];
       
       if (totalImages.length > 5) {
@@ -142,7 +138,6 @@ const SellItem = () => {
           throw error;
         }
         
-        // Get public URL
         const { data: { publicUrl } } = supabase.storage
           .from('products')
           .getPublicUrl(filePath);
@@ -179,10 +174,8 @@ const SellItem = () => {
     setIsSubmitting(true);
     
     try {
-      // Upload images first
       const imageUrls = await uploadImages();
       
-      // Create product
       const productData: ProductInsert = {
         title: values.title,
         description: values.description,
