@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getProducts } from "@/services/productService";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import ProductCard from "@/components/ProductCard";
+import ProductCardEnhanced from "@/components/ProductCardEnhanced";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
 
@@ -49,15 +49,9 @@ const ProductsPage = () => {
               <>
                 <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
                   {products.slice(0, visibleProducts).map((product) => (
-                    <ProductCard 
+                    <ProductCardEnhanced 
                       key={product.id}
-                      id={product.id}
-                      title={product.title}
-                      price={product.price}
-                      image={product.images ? product.images[0] : "/placeholder.svg"}
-                      seller="ReHome Seller"
-                      location={product.location || "Unknown"}
-                      condition={product.condition}
+                      product={product}
                     />
                   ))}
                 </div>

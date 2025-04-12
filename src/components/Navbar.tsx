@@ -1,22 +1,47 @@
+
 import { useState } from "react";
-import { Menu, X, Search, ShoppingCart, User } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Menu, X, Search, ShoppingCart, LogOut, LogIn, UserPlus, Plus, User } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useAuth } from "@/contexts/AuthContext";
+import { useToast } from "@/hooks/use-toast";
+import SearchDialog from "./SearchDialog";
+import Cart from "./Cart";
 
 const Navbar = () => {
   const isMobile = useIsMobile();
   const [isOpen, setIsOpen] = useState(false);
+  const { user, signOut } = useAuth();
+  const { toast } = useToast();
+  const navigate = useNavigate();
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
+  };
+
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+      toast({
+        title: "Signed out successfully",
+      });
+      navigate("/");
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Sign out failed",
+        description: "An error occurred while signing out.",
+      });
+    }
   };
 
   return (
@@ -55,34 +80,58 @@ const Navbar = () => {
             </div>
           </div>
           <div className="hidden sm:flex items-center space-x-4">
-            <Button variant="ghost" size="icon">
-              <Search className="h-5 w-5 text-rehome-neutral-600" />
-            </Button>
-            <Button variant="ghost" size="icon">
-              <ShoppingCart className="h-5 w-5 text-rehome-neutral-600" />
-            </Button>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon">
-                  <User className="h-5 w-5 text-rehome-neutral-600" />
+            <SearchDialog />
+            <Cart />
+            
+            {user ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="icon" className="relative">
+                    <div className="h-8 w-8 rounded-full bg-rehome-green-100 flex items-center justify-center text-rehome-green-700 font-medium">
+                      {user.user_metadata?.first_name ? user.user_metadata.first_name[0] : user.email?.[0].toUpperCase()}
+                    </div>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem disabled>
+                    <span className="text-rehome-neutral-500">
+                      {user.user_metadata?.first_name 
+                        ? `${user.user_metadata.first_name} ${user.user_metadata.last_name || ''}`
+                        : user.email}
+                    </span>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem>
+                    <Link to="/seller-dashboard" className="w-full flex items-center">
+                      <ShoppingCart className="mr-2 h-4 w-4" />
+                      <span>My listings</span>
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={handleSignOut}>
+                    <LogOut className="mr-2 h-4 w-4" />
+                    <span>Logout</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <Link to="/login">
+                <Button variant="ghost" className="flex items-center gap-1">
+                  <LogIn className="h-4 w-4" />
+                  <span>Login</span>
                 </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem>
-                  <Link to="/login" className="w-full">Login / Register</Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Link to="/seller-dashboard" className="w-full">Seller Dashboard</Link>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+              </Link>
+            )}
+            
             <Link to="/sell">
-              <Button className="bg-rehome-green-600 hover:bg-rehome-green-700">
-                Sell an Item
+              <Button className="bg-rehome-green-600 hover:bg-rehome-green-700 flex items-center gap-1">
+                <Plus className="h-4 w-4" />
+                <span>Sell an Item</span>
               </Button>
             </Link>
           </div>
           <div className="flex items-center sm:hidden">
+            <SearchDialog />
+            <Cart />
             <Button variant="ghost" size="icon" onClick={toggleMenu}>
               {isOpen ? (
                 <X className="h-6 w-6 text-rehome-neutral-600" />
@@ -123,13 +172,36 @@ const Navbar = () => {
           >
             How It Works
           </Link>
-          <Link
-            to="/login"
-            className="block pl-3 pr-4 py-2 text-base font-medium text-rehome-neutral-600 hover:bg-rehome-neutral-100"
-            onClick={() => setIsOpen(false)}
-          >
-            Login / Register
-          </Link>
+          
+          {user ? (
+            <>
+              <Link
+                to="/seller-dashboard"
+                className="block pl-3 pr-4 py-2 text-base font-medium text-rehome-neutral-600 hover:bg-rehome-neutral-100"
+                onClick={() => setIsOpen(false)}
+              >
+                My Listings
+              </Link>
+              <button
+                className="w-full text-left block pl-3 pr-4 py-2 text-base font-medium text-rehome-neutral-600 hover:bg-rehome-neutral-100"
+                onClick={() => {
+                  handleSignOut();
+                  setIsOpen(false);
+                }}
+              >
+                Logout
+              </button>
+            </>
+          ) : (
+            <Link
+              to="/login"
+              className="block pl-3 pr-4 py-2 text-base font-medium text-rehome-neutral-600 hover:bg-rehome-neutral-100"
+              onClick={() => setIsOpen(false)}
+            >
+              Login / Register
+            </Link>
+          )}
+          
           <Link
             to="/sell"
             className="block pl-3 pr-4 py-2 text-base font-medium bg-rehome-green-600 text-white hover:bg-rehome-green-700"
