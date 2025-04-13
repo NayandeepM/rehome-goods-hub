@@ -13,6 +13,7 @@ import ProductsPage from "./pages/ProductsPage";
 import PlaceholderPage from "./components/PlaceholderPage";
 import Auth from "./pages/Auth";
 import SellItem from "./pages/SellItem";
+import DatabaseExport from "./pages/DatabaseExport";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -39,6 +40,7 @@ const App = () => (
               <Route path="/how-it-works" element={<PlaceholderPage title="How It Works" />} />
               <Route path="/login" element={<Auth />} />
               <Route path="/sell" element={<SellItem />} />
+              <Route path="/database" element={<DatabaseExport />} />
               <Route path="/featured" element={<PlaceholderPage title="Featured Items" />} />
               <Route path="/deals" element={<PlaceholderPage title="Deals" />} />
               <Route path="/seller-tips" element={<PlaceholderPage title="Seller Tips" />} />
