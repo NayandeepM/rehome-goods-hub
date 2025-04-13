@@ -1,3 +1,4 @@
+
 import { supabase } from "@/integrations/supabase/client";
 import { Product, ProductInsert, ProductUpdate } from "@/types/database.types";
 import { mockProducts } from "@/pages/Browse/data/mockProducts";
@@ -16,6 +17,7 @@ export const getProducts = async (): Promise<Product[]> => {
     }
 
     if (!data || data.length === 0) {
+      console.log("No products found in database, using mock data");
       // If no data from Supabase, return mock data
       return mockProducts as unknown as Product[];
     }
