@@ -6,8 +6,8 @@ import Footer from "@/components/Footer";
 import { Loader2 } from "lucide-react";
 import ProductCardEnhanced from "@/components/ProductCardEnhanced";
 import { getProductsByCategory } from "@/services/productService";
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
+import { usePagination } from "@/hooks/usePagination";
+import PaginationControls from "@/components/PaginationControls";
 
 // Map slug to display name
 const categoryDisplayNames: Record<string, string> = {
@@ -31,7 +31,6 @@ const categoryMappings: Record<string, string> = {
 
 const CategoryDetail = () => {
   const { slug } = useParams<{ slug: string }>();
-  const [visibleProducts, setVisibleProducts] = useState(8);
   
   const categoryName = slug ? categoryMappings[slug] || slug : "";
   const displayName = slug ? categoryDisplayNames[slug] || categoryName : "Category";
@@ -39,14 +38,19 @@ const CategoryDetail = () => {
   const { data: products, isLoading, error } = useQuery({
     queryKey: ["products", "category", categoryName],
     queryFn: () => getProductsByCategory(categoryName),
-    enabled: !!categoryName
+    enabled: !!categoryName,
+    staleTime: 5 * 60 * 1000, // 5 minutes
   });
-
-  const showMoreProducts = () => {
-    if (products) {
-      setVisibleProducts(Math.min(visibleProducts + 8, products.length));
-    }
-  };
+  
+  const {
+    currentItems,
+    currentPage,
+    totalPages,
+    goToPage
+  } = usePagination({
+    items: products || [],
+    itemsPerPage: 12
+  });
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -74,7 +78,7 @@ const CategoryDetail = () => {
             ) : products && products.length > 0 ? (
               <>
                 <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-                  {products.slice(0, visibleProducts).map((product) => (
+                  {currentItems.map((product) => (
                     <ProductCardEnhanced 
                       key={product.id}
                       product={product}
@@ -82,17 +86,14 @@ const CategoryDetail = () => {
                   ))}
                 </div>
                 
-                {visibleProducts < (products?.length || 0) && (
-                  <div className="mt-8 text-center">
-                    <Button 
-                      variant="outline" 
-                      onClick={showMoreProducts}
-                      className="border-rehome-green-500 text-rehome-green-600 hover:bg-rehome-green-50"
-                    >
-                      Load More
-                    </Button>
-                  </div>
-                )}
+                <div className="mt-8">
+                  <PaginationControls
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    onPageChange={goToPage}
+                    className="justify-center"
+                  />
+                </div>
               </>
             ) : (
               <div className="text-center py-20">

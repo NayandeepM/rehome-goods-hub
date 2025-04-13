@@ -25,6 +25,7 @@ interface BrowseLayoutProps {
   handleConditionChange: (condition: string) => void;
   isFilterOpen: boolean;
   setIsFilterOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  isLoading?: boolean;
 }
 
 const BrowseLayout: React.FC<BrowseLayoutProps> = ({
@@ -38,7 +39,8 @@ const BrowseLayout: React.FC<BrowseLayoutProps> = ({
   handleCategoryChange,
   handleConditionChange,
   isFilterOpen,
-  setIsFilterOpen
+  setIsFilterOpen,
+  isLoading = false
 }) => {
   return (
     <div className="container mx-auto px-4 py-8">
@@ -98,7 +100,10 @@ const BrowseLayout: React.FC<BrowseLayoutProps> = ({
         
         {/* Products grid */}
         <div className="w-full md:w-3/4 lg:w-4/5">
-          <ProductGrid filteredProducts={filteredProducts} />
+          <ProductGrid 
+            filteredProducts={filteredProducts} 
+            isLoading={isLoading}
+          />
         </div>
       </div>
     </div>

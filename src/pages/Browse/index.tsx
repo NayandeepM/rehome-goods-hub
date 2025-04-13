@@ -21,7 +21,8 @@ const Browse = () => {
     handleCategoryChange,
     handleConditionChange,
     isFilterOpen,
-    setIsFilterOpen
+    setIsFilterOpen,
+    isLoading
   } = useBrowseProducts();
 
   return (
@@ -60,6 +61,7 @@ const Browse = () => {
           handleConditionChange={handleConditionChange}
           isFilterOpen={isFilterOpen}
           setIsFilterOpen={setIsFilterOpen}
+          isLoading={isLoading}
         />
       </main>
       <Footer />

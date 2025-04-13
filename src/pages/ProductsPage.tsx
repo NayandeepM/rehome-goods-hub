@@ -5,22 +5,26 @@ import { getProducts } from "@/services/productService";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ProductCardEnhanced from "@/components/ProductCardEnhanced";
-import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
+import { usePagination } from "@/hooks/usePagination";
+import PaginationControls from "@/components/PaginationControls";
 
 const ProductsPage = () => {
-  const [visibleProducts, setVisibleProducts] = useState(8);
-  
   const { data: products, isLoading, error } = useQuery({
     queryKey: ["products"],
-    queryFn: getProducts
+    queryFn: getProducts,
+    staleTime: 5 * 60 * 1000, // 5 minutes
   });
-
-  const showMoreProducts = () => {
-    if (products) {
-      setVisibleProducts(Math.min(visibleProducts + 8, products.length));
-    }
-  };
+  
+  const {
+    currentItems,
+    currentPage,
+    totalPages,
+    goToPage
+  } = usePagination({
+    items: products || [],
+    itemsPerPage: 12
+  });
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -48,7 +52,7 @@ const ProductsPage = () => {
             ) : products && products.length > 0 ? (
               <>
                 <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-                  {products.slice(0, visibleProducts).map((product) => (
+                  {currentItems.map((product) => (
                     <ProductCardEnhanced 
                       key={product.id}
                       product={product}
@@ -56,17 +60,14 @@ const ProductsPage = () => {
                   ))}
                 </div>
                 
-                {visibleProducts < (products?.length || 0) && (
-                  <div className="mt-8 text-center">
-                    <Button 
-                      variant="outline" 
-                      onClick={showMoreProducts}
-                      className="border-rehome-green-500 text-rehome-green-600 hover:bg-rehome-green-50"
-                    >
-                      Load More
-                    </Button>
-                  </div>
-                )}
+                <div className="mt-8">
+                  <PaginationControls
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    onPageChange={goToPage}
+                    className="justify-center"
+                  />
+                </div>
               </>
             ) : (
               <div className="text-center py-20">
