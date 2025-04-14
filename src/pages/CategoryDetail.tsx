@@ -16,7 +16,10 @@ const categoryDisplayNames: Record<string, string> = {
   "home-garden": "Home & Garden",
   "books-media": "Books & Media",
   "sports-outdoors": "Sports & Outdoors",
-  "collectibles": "Collectibles"
+  "collectibles": "Collectibles",
+  "toys-games": "Toys & Games",
+  "automotive": "Automotive",
+  "jewelry-watches": "Jewelry & Watches"
 };
 
 // Map slug to category name in database
@@ -26,7 +29,10 @@ const categoryMappings: Record<string, string> = {
   "home-garden": "Furniture",
   "books-media": "Books",
   "sports-outdoors": "Sports",
-  "collectibles": "Collectibles"
+  "collectibles": "Collectibles",
+  "toys-games": "Toys & Games",
+  "automotive": "Automotive",
+  "jewelry-watches": "Jewelry & Watches"
 };
 
 const CategoryDetail = () => {

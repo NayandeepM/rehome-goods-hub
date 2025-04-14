@@ -16,6 +16,7 @@ import SellItem from "./pages/SellItem";
 import DatabaseExport from "./pages/DatabaseExport";
 import CategoryDetail from "./pages/CategoryDetail";
 import ProductDetail from "./pages/ProductDetail";
+import CategoriesPage from "./pages/CategoriesPage";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -39,7 +40,7 @@ const App = () => (
               <Route path="/browse" element={<Browse />} />
               <Route path="/products" element={<ProductsPage />} />
               <Route path="/product/:id" element={<ProductDetail />} />
-              <Route path="/categories" element={<PlaceholderPage title="Categories" />} />
+              <Route path="/categories" element={<CategoriesPage />} />
               <Route path="/category/:slug" element={<CategoryDetail />} />
               <Route path="/how-it-works" element={<PlaceholderPage title="How It Works" />} />
               <Route path="/login" element={<Auth />} />
