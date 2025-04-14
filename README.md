@@ -1,2 +1,1 @@
-
-https://rehome-goods-hub.lovable.app/categories
+https://rehome-goods-hub.lovable.app/
