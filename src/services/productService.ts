@@ -31,21 +31,35 @@ export const getProducts = async (): Promise<Product[]> => {
 };
 
 export const getProductById = async (id: string): Promise<Product | null> => {
-  const { data, error } = await supabase
-    .from("products")
-    .select("*")
-    .eq("id", id)
-    .single();
+  try {
+    // First try to get product from database
+    const { data, error } = await supabase
+      .from("products")
+      .select("*")
+      .eq("id", id)
+      .single();
 
-  if (error) {
-    if (error.code === "PGRST116") {
+    if (error) {
+      console.error("Error fetching product from database:", error);
+      
+      // If database fetch fails, try to find in mock data
+      const mockProduct = mockProducts.find(p => p.id === id);
+      if (mockProduct) {
+        console.log("Found product in mock data:", mockProduct);
+        return mockProduct as unknown as Product;
+      }
+      
       return null; // Product not found
     }
-    console.error("Error fetching product:", error);
-    throw error;
-  }
 
-  return data as Product;
+    return data as Product;
+  } catch (error) {
+    console.error("Exception fetching product:", error);
+    
+    // Try to find in mock data as fallback
+    const mockProduct = mockProducts.find(p => p.id === id);
+    return mockProduct ? (mockProduct as unknown as Product) : null;
+  }
 };
 
 export const createProduct = async (product: ProductInsert): Promise<Product> => {
@@ -93,6 +107,7 @@ export const deleteProduct = async (id: string): Promise<void> => {
 
 export const getProductsByCategory = async (category: string): Promise<Product[]> => {
   try {
+    // Try to get products from database first
     const { data, error } = await supabase
       .from("products")
       .select("*")
@@ -107,6 +122,7 @@ export const getProductsByCategory = async (category: string): Promise<Product[]
     }
 
     if (!data || data.length === 0) {
+      console.log("No products found in category in database, using mock data");
       // If no data from Supabase, return filtered mock data
       return mockProducts.filter(p => p.category === category) as unknown as Product[];
     }
