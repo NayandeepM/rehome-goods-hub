@@ -33,7 +33,7 @@ export function ProductCardEnhanced({ product }: ProductCardEnhancedProps) {
         </Button>
       </div>
       <div className="p-4 space-y-2">
-        <Link to={`/products/${product.id}`}>
+        <Link to={`/product/${product.id}`}>
           <h3 className="font-medium text-rehome-neutral-900 line-clamp-1 hover:text-rehome-green-600 transition-colors">
             {product.title}
           </h3>

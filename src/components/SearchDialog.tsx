@@ -33,8 +33,7 @@ export function SearchDialog() {
   
   const handleProductClick = (productId: string) => {
     setOpen(false);
-    // For now, navigate to products page since we don't have individual product pages yet
-    navigate(`/products`);
+    navigate(`/product/${productId}`);
   };
   
   return (

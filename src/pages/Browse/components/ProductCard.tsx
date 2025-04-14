@@ -8,6 +8,7 @@ import {
   CardTitle 
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 interface ProductCardProps {
   product: {
@@ -41,7 +42,9 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       </CardContent>
       <CardFooter className="p-4 pt-0 flex justify-between items-center">
         <p className="font-semibold">${product.price.toFixed(2)}</p>
-        <Button size="sm">View Item</Button>
+        <Link to={`/product/${product.id}`}>
+          <Button size="sm">View Item</Button>
+        </Link>
       </CardFooter>
     </Card>
   );
